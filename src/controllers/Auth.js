@@ -22,13 +22,9 @@ const Auth = {
       VALUES($1, $2, $3, $4, $5, $6, $7)
       returning *`;
       const values = [
-        email.trim().toLowerCase(),
-        first_name.trim().toLowerCase(),
-        last_name.trim().toLowerCase(),
-        hash,
-        userType === 'admin',
-        moment(new Date()),
-        moment(new Date())
+        email.trim().toLowerCase(), first_name.trim().toLowerCase(),
+        last_name.trim().toLowerCase(), hash,
+        userType === 'admin', moment(new Date()), moment(new Date())
       ];
       const { rows } = await db.query(createQuery, values);
       const token = createToken(rows[0].id, rows[0].is_admin);
@@ -52,7 +48,7 @@ const Auth = {
    * @returns {object} user object
    */
   async login(req, res) {
-    const userQuery = 'SELECT * FROM users WHERE email = $1';
+    const userQuery = 'SELECT * FROM Users WHERE email = $1';
     const { email, password } = req.body;
     try {
       const { rows } = await db.query(userQuery, [email]);
@@ -63,7 +59,9 @@ const Auth = {
         return handleServerResponseError(res, 403, 'Password incorrect');
       }
       const token = createToken(rows[0].id, rows[0].is_admin);
-      return handleServerResponse(res, 200, { user_id: rows[0].id, token });
+      return handleServerResponse(res, 200, {
+        user_id: rows[0].id, is_admin: rows[0].is_admin, token
+      });
     } catch (error) {
       return handleServerError(res, error);
     }

@@ -6,7 +6,7 @@ import {
   handleServerResponseError,
 } from '../helpers/utils';
 
-export default {
+const Bus = {
   async create(req, res) {
     const {
       // eslint-disable-next-line camelcase
@@ -18,18 +18,12 @@ export default {
       VALUES($1, $2, $3, $4, $5, $6, $7)
       returning *`;
       const values = [
-        model.trim().toLowerCase(),
-        numberPlate.trim().toLowerCase(),
-        manufacturer.trim().toLowerCase(),
-        year,
-        capacity,
-        moment(new Date()),
-        moment(new Date())
+        model.trim().toLowerCase(), numberPlate.trim().toLowerCase(),
+        manufacturer.trim().toLowerCase(), year,
+        capacity, moment(new Date()), moment(new Date())
       ];
       const { rows } = await db.query(createQuery, values);
-      return handleServerResponse(res, 201, {
-        bus: rows[0]
-      });
+      return handleServerResponse(res, 201, { bus: rows[0] });
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
         return handleServerResponseError(res, 409, `Bus with number plate:- ${numberPlate.trim().toLowerCase()} already exists`);
@@ -38,3 +32,5 @@ export default {
     }
   },
 };
+
+export default Bus;

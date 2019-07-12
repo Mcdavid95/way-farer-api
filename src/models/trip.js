@@ -39,6 +39,7 @@ export const createTripTable = async () => {
           trip_date TIMESTAMP,
           status status DEFAULT 'active',
           fare FLOAT NOT NULL,
+          seats JSONB NOT NULL,
           created_date TIMESTAMP,
           modified_date TIMESTAMP
         )`;

@@ -83,9 +83,38 @@ const createBusInput = (req, res, next) => {
   return next();
 };
 
+/**
+ * @function
+  * @param {*} req
+  * @param {*} res
+  * @param {*} next
+ * @description validates create trip input
+ * @returns {Response | RequestHandler} error or request handler
+ */
+const createTripInput = (req, res, next) => {
+  const {
+    // eslint-disable-next-line camelcase
+    bus_id, origin, destination, trip_date, fare
+  } = req.body;
+  const schema = Joi.object().keys({
+    bus_id: Joi.number().required(),
+    origin: Joi.string().required(),
+    destination: Joi.string().trim().required(),
+    trip_date: Joi.string().required(),
+    fare: Joi.number().required()
+  });
+  const result = Joi.validate({
+    bus_id, origin, destination, trip_date, fare
+  }, schema);
+  if (result.error) {
+    return handleServerResponseError(res, 401, result.error.details[0].message);
+  }
+  return next();
+};
 
 export default {
   validateSignup: signupInput,
   validateSignin: signinInput,
-  validateCreateBus: createBusInput
+  validateCreateBus: createBusInput,
+  validateCreateTrip: createTripInput
 };

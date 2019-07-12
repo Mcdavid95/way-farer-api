@@ -34,7 +34,7 @@ export const handleServerResponse = (response, status, data) => response.status(
 // eslint-disable-next-line max-len
 export const handleServerResponseError = (response, status, message) => response.status(status).send({
   status: 'error',
-  message
+  error: message
 });
 
 export const handleServerError = (res, error) => {
