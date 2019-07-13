@@ -48,6 +48,7 @@ const Auth = {
    * @returns {object} user object
    */
   async login(req, res) {
+    console.log(req.body);
     const userQuery = 'SELECT * FROM Users WHERE email = $1';
     const { email, password } = req.body;
     try {

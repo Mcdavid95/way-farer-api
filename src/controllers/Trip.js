@@ -52,6 +52,7 @@ const Trip = {
    * @returns {object} response object
    */
   async create(req, res) {
+    console.log(req.body);
     const {
       bus_id, origin, destination, trip_date, fare
     } = req.body;
@@ -80,6 +81,7 @@ const Trip = {
    * @returns {object} response object
    */
   async getTrips(req, res) {
+    console.log(req.body);
     try {
       const findAllQuery = 'SELECT * FROM Trips';
       const { rows } = await db.query(findAllQuery);
