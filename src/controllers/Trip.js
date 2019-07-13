@@ -26,11 +26,11 @@ const getBus = async (id) => {
  * @param {number} busCapacity capacity of bus
  * @returns {array} array of objects containing seat number and seat status
  */
-const createSeats = async (busCapacity) => {
-  const seats = new Array(busCapacity).fill(0).map((seat, index) => ({
+const createSeats = (busCapacity) => {
+  const seats = new Array(busCapacity).fill(0).map((seat, index) => (JSON.stringify({
     is_open: true,
     seat_number: index + 1
-  }));
+  })));
   return seats;
 };
 
