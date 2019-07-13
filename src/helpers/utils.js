@@ -32,10 +32,13 @@ export const handleServerResponse = (response, status, data) => response.status(
    * @returns {*} error response
    */
 // eslint-disable-next-line max-len
-export const handleServerResponseError = (response, status, message) => response.status(status).send({
+export const handleServerResponseError = (response, status, message) => {
+  logger().error(message);
+  return response.status(status).send({
   status: 'error',
   error: message
-});
+  });
+};
 
 export const handleServerError = (res, error) => {
   logger().error(error);
