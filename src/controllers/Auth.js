@@ -11,6 +11,7 @@ import {
 
 const Auth = {
   async create(req, res) {
+    console.log(req.body);
     const {
       // eslint-disable-next-line camelcase
       email, first_name, last_name, password, userType
