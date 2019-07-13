@@ -103,9 +103,7 @@ export const hasToken = async (req, res, next) => {
       req.decoded = decoded;
       return next();
     }
-    return res.status(403).send({
-      message: 'You have to be loggedin first'
-    });
+    return handleServerResponseError(res, 403, 'You have to be logged in');
   } catch (error) {
     return handleServerResponseError(res, 403, error);
   }
