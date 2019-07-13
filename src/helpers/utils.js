@@ -80,7 +80,7 @@ export const createToken = (id, isAdmin) => {
     },
     process.env.SECRET, { expiresIn: '7d' }
   );
-  return `Bearer ${token}`;
+  return token;
 };
 
 /**
