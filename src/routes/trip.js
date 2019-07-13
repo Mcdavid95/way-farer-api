@@ -9,7 +9,7 @@ const { validateCreateTrip } = ValidateInput;
 const router = express.Router();
 
 router.post('/', hasToken, isAdmin, validateCreateTrip, create);
-router.get('/', hasToken, getTrips);
+router.get('/', getTrips);
 router.get('/:trip_id', hasToken, getOneTrip);
 
 export default router;
