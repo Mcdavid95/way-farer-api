@@ -11,6 +11,7 @@ import {
 
 const Auth = {
   async create(req, res) {
+    console.log(req.body);
     const {
       // eslint-disable-next-line camelcase
       email, first_name, last_name, password, userType
@@ -48,10 +49,11 @@ const Auth = {
    * @returns {object} user object
    */
   async login(req, res) {
+    console.log(req.body);
     const userQuery = 'SELECT * FROM Users WHERE email = $1';
     const { email, password } = req.body;
     try {
-      const { rows } = await db.query(userQuery, [email]);
+      const { rows } = await db.query(userQuery, [email.trim().toLowerCase()]);
       if (!rows[0]) {
         return handleServerResponseError(res, 404, 'Account with Email not found');
       }
