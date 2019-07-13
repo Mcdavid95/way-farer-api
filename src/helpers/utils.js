@@ -94,10 +94,10 @@ export const createToken = (id, isAdmin) => {
  * @returns {Object} response object
  */
 export const hasToken = async (req, res, next) => {
-  const token = req.body.token || req.headers['x-access-token'] || req.headers.Authorization;
+  const token = req.body.token || req.headers['x-access-token'] || req.headers.Authorization || req.body.Authorization;
   try {
-    const noBearer = token.replace(/Bearer\s/gi, '');
     if (token) {
+      const noBearer = token.replace(/Bearer\s/gi, '');
       const decoded = await jwt.verify(noBearer, process.env.SECRET);
       const text = 'SELECT * FROM Users WHERE id = $1';
       const { rows } = await db.query(text, [decoded.id]);
