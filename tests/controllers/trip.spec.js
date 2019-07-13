@@ -62,4 +62,22 @@ describe('Trip controller', () => {
       .send(noBusId);
     expect(server.statusCode).to.equal(401);
   });
+
+  it('should get all trips', async () => {
+    const server = await api.get('/api/v1/trips')
+      .type('form')
+      .set('Content-Type', 'application/json')
+      .set('x-access-token', userToken);
+    console.log(server.body);
+    expect(server.statusCode).to.equal(200);
+  });
+
+  it('should get one trip', async () => {
+    const server = await api.get('/api/v1/trips/1')
+      .type('form')
+      .set('Content-Type', 'application/json')
+      .set('x-access-token', userToken);
+    console.log(server.body);
+    expect(server.statusCode).to.equal(200);
+  });
 });

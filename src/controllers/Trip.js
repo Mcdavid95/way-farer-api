@@ -12,9 +12,9 @@ import {
  * @returns {object} object containing bus details
  */
 const getBus = async (id) => {
-  const userQuery = 'SELECT * FROM Buses WHERE id = $1';
+  const busQuery = 'SELECT * FROM Buses WHERE id = $1';
   try {
-    const { rows } = await db.query(userQuery, [id]);
+    const { rows } = await db.query(busQuery, [id]);
     return rows[0];
   } catch (error) {
     return error;
@@ -26,11 +26,11 @@ const getBus = async (id) => {
  * @param {number} busCapacity capacity of bus
  * @returns {array} array of objects containing seat number and seat status
  */
-const createSeats = (busCapacity) => {
-  const seats = new Array(busCapacity).fill(0).map((seat, index) => (JSON.stringify({
+const createSeats = async (busCapacity) => {
+  const seats = new Array(busCapacity).fill(0).map((seat, index) => ({
     is_open: true,
     seat_number: index + 1
-  })));
+  }));
   return seats;
 };
 
@@ -40,10 +40,17 @@ const constructData = trip => ({
   origin: trip.origin,
   destination: trip.destination,
   trip_date: trip.trip_date,
-  fare: trip.fare
+  fare: trip.fare,
+  seats: trip.seats
 });
 
 const Trip = {
+  /**
+   * @method create
+   * @param {object} req request object
+   * @param {object} res response object
+   * @returns {object} response object
+   */
   async create(req, res) {
     const {
       bus_id, origin, destination, trip_date, fare
@@ -57,11 +64,43 @@ const Trip = {
       const values = [
         bus_id, origin.trim().toLowerCase(),
         destination.trim().toLowerCase(), moment(trip_date),
-        fare, `${createSeats(bus.id)}`,
+        fare, createSeats(bus.capacity),
         moment(new Date()), moment(new Date())
       ];
       const { rows } = await db.query(createQuery, values);
       return handleServerResponse(res, 201, constructData(rows[0]));
+    } catch (error) {
+      handleServerError(res, error);
+    }
+  },
+  /**
+   * @method getTrips
+   * @param {object} req request object
+   * @param {object} res response object
+   * @returns {object} response object
+   */
+  async getTrips(req, res) {
+    try {
+      const findAllQuery = 'SELECT * FROM Trips';
+      const { rows } = await db.query(findAllQuery);
+      const result = await rows.map(row => constructData(row));
+      return handleServerResponse(res, 200, result);
+    } catch (error) {
+      handleServerError(res, error);
+    }
+  },
+  /**
+   * @method getTrips
+   * @param {object} req request object
+   * @param {object} res response object
+   * @returns {object} response object
+   */
+  async getOneTrip(req, res) {
+    try {
+      const { trip_id } = req.params;
+      const findAllQuery = 'SELECT * FROM Trips WHERE id = $1';
+      const { rows } = await db.query(findAllQuery, [trip_id]);
+      return handleServerResponse(res, 200, constructData(rows[0]));
     } catch (error) {
       handleServerError(res, error);
     }
