@@ -35,8 +35,8 @@ export const handleServerResponse = (response, status, data) => response.status(
 export const handleServerResponseError = (response, status, message) => {
   logger().error(message);
   return response.status(status).send({
-  status: 'error',
-  error: message
+    status: 'error',
+    error: message
   });
 };
 
