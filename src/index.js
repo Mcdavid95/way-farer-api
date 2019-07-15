@@ -8,6 +8,7 @@ import { logger } from './helpers/utils';
 import auth from './routes/auth';
 import bus from './routes/bus';
 import trip from './routes/trip';
+import booking from './routes/booking';
 
 dotenv.config();
 
@@ -29,8 +30,9 @@ app.get('/api/v1', (req, res) => res.status(200).send({
 }));
 
 app.use('/api/v1/auth', auth);
-app.use('/api/v1/trips', trip);
 app.use('/api/v1/buses', bus);
+app.use('/api/v1/trips', trip);
+app.use('/api/v1/bookings', booking);
 
 app.listen(port);
 logger().info(`app running on port ${port}`);

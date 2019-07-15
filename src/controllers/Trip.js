@@ -104,6 +104,22 @@ const Trip = {
     } catch (error) {
       handleServerError(res, error);
     }
+  },
+  /**
+   * @method cancelTrip
+   * @param {object} req request object
+   * @param {object} res response object
+   * @returns {object} response object
+   */
+  async cancelTrip(req, res) {
+    try {
+      const { tripId } = req.params;
+      const findAllQuery = 'UPDATE Trips SET status = $2 WHERE id = $1';
+      const { rows } = await db.query(findAllQuery, [tripId, 'cancelled']);
+      return handleServerResponse(res, 202, constructData(rows[0]));
+    } catch (error) {
+      handleServerError(res, error);
+    }
   }
 };
 

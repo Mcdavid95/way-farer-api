@@ -26,12 +26,14 @@ export const createBookingTable = async () => {
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
         trip_id INTEGER NOT NULL,
-        created_on TIMESTAMP,
-        modified_date TIMESTAMP
-        FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
-        FOREIGN KEY (trip_id) REFERENCES Trip (id) ON DELETE CASCADE
+        seat_number INTEGER NOT NULL,
+        created_date TIMESTAMP,
+        modified_date TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
+        FOREIGN KEY (trip_id) REFERENCES Trips (id) ON DELETE CASCADE
       )`;
   try {
+    logger().info('Creating Bookings table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {
@@ -49,6 +51,7 @@ export const dropBookingTable = async () => {
   const client = await pool.connect();
   const queryText = 'DROP TABLE IF EXISTS Bookings';
   try {
+    logger().info('Dropping Bookings table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {

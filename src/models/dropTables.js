@@ -4,10 +4,10 @@ import { dropTripTable } from './trip';
 import { dropBookingTable } from './booking';
 
 const dropTables = async () => {
-  await dropUserTable();
-  await dropBusTable();
-  await dropTripTable();
   await dropBookingTable();
+  await dropTripTable();
+  await dropBusTable();
+  await dropUserTable();
 };
 
 export default dropTables;

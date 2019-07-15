@@ -51,7 +51,7 @@ const Auth = {
     const userQuery = 'SELECT * FROM Users WHERE email = $1';
     const { email, password } = req.body;
     try {
-      const { rows } = await db.query(userQuery, [email]);
+      const { rows } = await db.query(userQuery, [email.trim().toLowerCase()]);
       if (!rows[0]) {
         return handleServerResponseError(res, 404, 'Account with Email not found');
       }

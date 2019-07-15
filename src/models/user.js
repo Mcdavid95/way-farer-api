@@ -33,6 +33,7 @@ export const createUserTable = async () => {
         modified_date TIMESTAMP
       )`;
   try {
+    logger().info('Creating Users table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {
@@ -50,6 +51,7 @@ export const dropUserTable = async () => {
   const client = await pool.connect();
   const queryText = 'DROP TABLE IF EXISTS Users';
   try {
+    logger().info('Dropping Users table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {

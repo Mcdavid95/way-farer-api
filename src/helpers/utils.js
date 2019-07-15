@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import bunyan from 'bunyan';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -32,10 +33,13 @@ export const handleServerResponse = (response, status, data) => response.status(
    * @returns {*} error response
    */
 // eslint-disable-next-line max-len
-export const handleServerResponseError = (response, status, message) => response.status(status).send({
-  status: 'error',
-  error: message
-});
+export const handleServerResponseError = (response, status, message) => {
+  logger().error(message);
+  return response.status(status).send({
+    status: 'error',
+    error: message
+  });
+};
 
 export const handleServerError = (res, error) => {
   logger().error(error);
@@ -91,10 +95,11 @@ export const createToken = (id, isAdmin) => {
  * @returns {Object} response object
  */
 export const hasToken = async (req, res, next) => {
-  const token = req.body.token || req.headers['x-access-token'];
+  const token = req.body.token || req.headers['x-access-token'] || req.headers.Authorization || req.body.Authorization;
   try {
     if (token) {
-      const decoded = await jwt.verify(token, process.env.SECRET);
+      const noBearer = token.replace(/Bearer\s/gi, '');
+      const decoded = await jwt.verify(noBearer, process.env.SECRET);
       const text = 'SELECT * FROM Users WHERE id = $1';
       const { rows } = await db.query(text, [decoded.id]);
       if (!rows[0]) {
@@ -110,16 +115,47 @@ export const hasToken = async (req, res, next) => {
 };
 
 /**
- * @method hasToken
+ * @function checkSeatNumber
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns {void} moves to next middleware
+ */
+export const checkSeatNumber = async (req, res, next) => {
+  const { trip_id, seat_number } = req.body;
+  const tripQuery = `SELECT id, seats [${seat_number}]
+  FROM Trips
+  WHERE id = $1`;
+  const value = [
+    trip_id
+  ];
+  try {
+    if (seat_number) {
+      const { rows } = await db.query(tripQuery, value);
+      console.log(rows[0]);
+      if (rows[0].seats.is_open === false) {
+        return handleServerResponseError(res, 409, `seat_number ${seat_number} already taken, please select another`);
+      }
+      return next();
+    }
+    return next();
+  } catch (error) {
+    return handleServerError(res, error);
+  }
+};
+
+/**
+ * @method isAdmin
  * @param {*} req
  * @param {*} res
  * @param {*} next
  * @returns {Object} response object
  */
 export const isAdmin = async (req, res, next) => {
-  const token = req.body.token || req.headers['x-access-token'];
+  const token = req.body.token || req.headers['x-access-token'] || req.headers.Authorization;
   try {
-    const decoded = await jwt.verify(token, process.env.SECRET);
+    const noBearer = token.replace(/Bearer\s/gi, '');
+    const decoded = await jwt.verify(noBearer, process.env.SECRET);
     if (req.body.is_admin) {
       return next();
     }

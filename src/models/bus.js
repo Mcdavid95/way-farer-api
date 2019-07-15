@@ -33,6 +33,7 @@ export const createBusTable = async () => {
         modified_date TIMESTAMP
       )`;
   try {
+    logger().info('Creating Buses table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {
@@ -47,6 +48,7 @@ export const createBusTable = async () => {
  * @returns {*} void
  */
 export const dropBusTable = async () => {
+  logger().info('Dropping Buses table');
   const client = await pool.connect();
   const queryText = 'DROP TABLE IF EXISTS Buses';
   try {

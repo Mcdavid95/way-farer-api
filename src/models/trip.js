@@ -43,6 +43,7 @@ export const createTripTable = async () => {
           created_date TIMESTAMP,
           modified_date TIMESTAMP
         )`;
+    logger().info('Creating Trips table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {
@@ -60,6 +61,7 @@ export const dropTripTable = async () => {
   const client = await pool.connect();
   const queryText = 'DROP TABLE IF EXISTS Trips';
   try {
+    logger().info('Dropping Trips table');
     const response = await client.query(queryText);
     logger().info(response);
   } catch (error) {
