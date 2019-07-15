@@ -35,7 +35,7 @@ const createSeats = (busCapacity) => {
 };
 
 const constructData = trip => ({
-  trip_id: trip.id,
+  id: trip.id,
   bus_id: trip.bus_id,
   origin: trip.origin,
   destination: trip.destination,
