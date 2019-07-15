@@ -34,16 +34,6 @@ const createSeats = (busCapacity) => {
   return seats;
 };
 
-const constructData = trip => ({
-  id: trip.id,
-  bus_id: trip.bus_id,
-  origin: trip.origin,
-  destination: trip.destination,
-  trip_date: trip.trip_date,
-  fare: trip.fare,
-  seats: trip.seats
-});
-
 const Trip = {
   /**
    * @method create
