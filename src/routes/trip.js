@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post('/', hasToken, isAdmin, validateCreateTrip, create);
 router.get('/', hasToken, getTrips);
-router.get('/:trip_id', hasToken, getOneTrip);
-router.patch('/:trip_id', hasToken, isAdmin, cancelTrip);
+router.get('/:tripId', hasToken, getOneTrip);
+router.patch('/:tripId', hasToken, isAdmin, cancelTrip);
 
 export default router;
