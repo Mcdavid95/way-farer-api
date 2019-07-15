@@ -103,9 +103,9 @@ const Trip = {
   async cancelTrip(req, res) {
     try {
       const { tripId } = req.params;
-      const findAllQuery = 'UPDATE Trips SET status = $2 WHERE id = $1';
+      const findAllQuery = 'UPDATE Trips SET status = $2 WHERE id = $1 returnng *';
       const { rows } = await db.query(findAllQuery, [tripId, 'cancelled']);
-      return handleServerResponse(res, 202, rows[0]);
+      return handleServerResponse(res, 200, rows[0]);
     } catch (error) {
       handleServerError(res, error);
     }

@@ -4,7 +4,6 @@ import db from './db';
 import {
   handleServerError,
   handleServerResponse,
-  handleServerResponseError
 } from '../helpers/utils';
 
 /**
@@ -148,10 +147,7 @@ const Booking = {
     const { bookingId } = req.params;
     const deleteQuery = 'DELETE FROM Bookings WHERE id=$1';
     try {
-      const { rows } = await db.query(deleteQuery, [bookingId]);
-      if (!rows[0]) {
-        return handleServerResponseError(res, 404, 'booking not found');
-      }
+      await db.query(deleteQuery, [bookingId]);
       return handleServerResponse(res, 204, 'Booking deleted successfully');
     } catch (error) {
       return handleServerError(res, error);
