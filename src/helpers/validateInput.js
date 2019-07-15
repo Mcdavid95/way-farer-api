@@ -126,7 +126,7 @@ const createBookingInput = (req, res, next) => {
     trip_id
   } = req.body;
   const schema = Joi.object().keys({
-    trip_id: Joi.string().required(),
+    trip_id: Joi.number().required(),
   });
   const result = Joi.validate({
     trip_id
