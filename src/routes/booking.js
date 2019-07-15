@@ -16,6 +16,6 @@ const router = express.Router();
 router.post('/', hasToken, validateCreateBooking, checkSeatNumber, create);
 router.get('/', hasToken, getBookings);
 router.get('/:bookingId', hasToken, getOneBooking);
-router.delete('/:bookingId', hasToken, deleteBooking);
+router.delete('/:bookingId', deleteBooking);
 
 export default router;
