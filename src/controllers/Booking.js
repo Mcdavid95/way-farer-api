@@ -88,7 +88,7 @@ const Booking = {
       FROM Bookings booking, Users, Trips trip WHERE booking.id = $1 AND Users.id = booking.user_id AND trip.id = booking.trip_id`;
       const booking = await db.query(bookingQuery, [rows[0].id]);
       const result = booking.rows[0];
-      result.booking_id = rows[0].id;
+      result.id = rows[0].id;
       return handleServerResponse(res, 201, result);
     } catch (error) {
       handleServerError(res, error);

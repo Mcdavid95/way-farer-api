@@ -64,7 +64,7 @@ const Trip = {
       const values = [
         bus_id, origin.trim().toLowerCase(),
         destination.trim().toLowerCase(), moment(trip_date),
-        fare, createSeats(bus.capacity),
+        fare, createSeats(bus.capacity || 7),
         moment(new Date()), moment(new Date())
       ];
       const { rows } = await db.query(createQuery, values);
