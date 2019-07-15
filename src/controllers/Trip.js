@@ -68,7 +68,7 @@ const Trip = {
         moment(new Date()), moment(new Date())
       ];
       const { rows } = await db.query(createQuery, values);
-      return handleServerResponse(res, 201, constructData(rows[0]));
+      return handleServerResponse(res, 201, rows[0]);
     } catch (error) {
       handleServerError(res, error);
     }
@@ -83,8 +83,7 @@ const Trip = {
     try {
       const findAllQuery = 'SELECT * FROM Trips';
       const { rows } = await db.query(findAllQuery);
-      const result = await rows.map(row => constructData(row));
-      return handleServerResponse(res, 200, result);
+      return handleServerResponse(res, 200, rows);
     } catch (error) {
       handleServerError(res, error);
     }
@@ -100,7 +99,7 @@ const Trip = {
       const { trip_id } = req.params;
       const findAllQuery = 'SELECT * FROM Trips WHERE id = $1';
       const { rows } = await db.query(findAllQuery, [trip_id]);
-      return handleServerResponse(res, 200, constructData(rows[0]));
+      return handleServerResponse(res, 200, rows[0]);
     } catch (error) {
       handleServerError(res, error);
     }
@@ -116,7 +115,7 @@ const Trip = {
       const { tripId } = req.params;
       const findAllQuery = 'UPDATE Trips SET status = $2 WHERE id = $1';
       const { rows } = await db.query(findAllQuery, [tripId, 'cancelled']);
-      return handleServerResponse(res, 202, constructData(rows[0]));
+      return handleServerResponse(res, 202, rows[0]);
     } catch (error) {
       handleServerError(res, error);
     }

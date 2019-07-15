@@ -123,14 +123,13 @@ const createTripInput = (req, res, next) => {
 const createBookingInput = (req, res, next) => {
   const {
     // eslint-disable-next-line camelcase
-    user_id, trip_id
+    trip_id
   } = req.body;
   const schema = Joi.object().keys({
-    user_id: Joi.number().required(),
     trip_id: Joi.string().required(),
   });
   const result = Joi.validate({
-    user_id, trip_id
+    trip_id
   }, schema);
   if (result.error) {
     return handleServerResponseError(res, 401, result.error.details[0].message);

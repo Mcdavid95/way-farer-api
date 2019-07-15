@@ -80,7 +80,7 @@ const Booking = {
       returning *`;
       const seat = await checkSeatNumber(trip_id, seat_number);
       const values = [
-        user_id, trip_id, seat,
+        user_id || req.decoded.id, trip_id, seat,
         moment(new Date()), moment(new Date())
       ];
       const { rows } = await db.query(createQuery, values);
