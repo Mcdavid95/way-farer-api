@@ -107,11 +107,11 @@ const Booking = {
       const isAdmin = req.decoded.is_admin || is_admin;
       const userQuery = 'SELECT * FROM Users WHERE id = $1';
       const findAllQuery = `SELECT user_id, trip_id, bus_id, seat_number, trip_date, first_name, last_name, email
-      FROM Bookings booking, Users, Trips trip WHERE AND Users.id = booking.user_id AND trip.id = booking.trip_id`;
+      FROM Bookings booking, Users, Trips trip WHERE Users.id = booking.user_id AND trip.id = booking.trip_id`;
       const findUserQuery = `SELECT user_id, trip_id, bus_id, seat_number, trip_date, first_name, last_name, email
       FROM Bookings booking, Users, Trips trip WHERE booking.user_id = $1 AND Users.id = booking.user_id AND trip.id = booking.trip_id`;
       const user = await db.query(userQuery, [id]);
-      if (user.is_admin || isAdmin) {
+      if (user.rows[0].is_admin || isAdmin) {
         const { rows } = await db.query(findAllQuery);
         return handleServerResponse(res, 200, rows);
       }

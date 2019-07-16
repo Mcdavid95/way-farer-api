@@ -6,6 +6,14 @@ export const bus = {
   capacity: 16
 };
 
+export const secondBus = {
+  model: 'Hiace',
+  manufacturer: 'Toyota',
+  year: '2012',
+  numberPlate: 'fh34u5',
+  capacity: 16
+};
+
 export const incompleteBus = {
   model: 'Hiace',
   manufacturer: 'Toyota',

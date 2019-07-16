@@ -3,7 +3,7 @@ import api from '../test.config';
 import {
   normalUser, adminUser
 } from '../__mocks__/auth.mocks';
-import { trip, noBusId } from '../__mocks__/trip.mocks';
+import { trip, noBusId, secondTrip } from '../__mocks__/trip.mocks';
 
 const { expect } = chai;
 let adminToken,
@@ -24,7 +24,7 @@ describe('Trip controller', () => {
       .type('form')
       .set('Content-Type', 'application/json')
       .set('x-access-token', adminToken)
-      .send(trip);
+      .send(secondTrip);
     expect(server.statusCode).to.equal(201);
   });
 
@@ -68,7 +68,6 @@ describe('Trip controller', () => {
       .type('form')
       .set('Content-Type', 'application/json')
       .set('x-access-token', userToken);
-    console.log(server.body);
     expect(server.statusCode).to.equal(200);
   });
 
@@ -77,7 +76,14 @@ describe('Trip controller', () => {
       .type('form')
       .set('Content-Type', 'application/json')
       .set('x-access-token', userToken);
-    console.log(server.body);
+    expect(server.statusCode).to.equal(200);
+  });
+
+  it('should cancel a trip', async () => {
+    const server = await api.patch('/api/v1/trips/2')
+      .type('form')
+      .set('Content-Type', 'application/json')
+      .set('x-access-token', adminToken);
     expect(server.statusCode).to.equal(200);
   });
 });
