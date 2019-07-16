@@ -148,7 +148,7 @@ const Booking = {
     const deleteQuery = 'DELETE FROM Bookings WHERE id=$1';
     try {
       await db.query(deleteQuery, [bookingId]);
-      return handleServerResponse(res, 204, 'Booking deleted successfully');
+      return handleServerResponse(res, 200, 'Booking deleted successfully');
     } catch (error) {
       return handleServerError(res, error);
     }
