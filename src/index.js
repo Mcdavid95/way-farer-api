@@ -4,15 +4,19 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 import { logger } from './helpers/utils';
 import auth from './routes/auth';
 import bus from './routes/bus';
 import trip from './routes/trip';
 import booking from './routes/booking';
 
+const swaggerDocument = YAML.load('./swagger.yaml');
 dotenv.config();
 
 const app = express();
+
 const port = parseInt(process.env.PORT, 10) || 1337;
 // Log requests to the console.
 app.use(morgan('dev'));
@@ -23,6 +27,8 @@ app.use(helmet())
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
+
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/api/v1', (req, res) => res.status(200).send({
   status: 'success',

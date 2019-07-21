@@ -1,0 +1,804 @@
+openapi: 3.0.0
+info:
+  description: This is the API docmentation for Telemed
+  version: "1.0.0-oas3"
+  title: Way-Farer API
+  contact:
+    email: mcdavidemereuwa95@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Users
+    description: Endpoints available for users
+  - name: Trips
+    description: Endpoints available for Trips
+  - name: Buses
+    description: Endpoints available for Buses
+  - name: Bookings
+    description: Endpoints available for booking a seat
+  - name: Admin
+    description: All Admin endpoint
+servers:
+  - url: 'https://save-a-seat.herokuapp.com'
+paths:
+  /api/v1/auth/signup:
+    post:
+      tags:
+        - Users
+      summary: registers a new user
+      operationId: createUser
+      description: |
+        By passing in the appropriate user info you should create a new user
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: jwt token
+                      user:
+                        type: object
+                        description: user data
+                    description: data from request
+                example:
+                  status: 'success'
+                  data:
+                    user:
+                      first_name: tunde
+                      last_name: pizza
+                    token: egsyfhgs45ushfjs45uughkdihdhojdl87d
+
+          description: User successfully created
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'email is required'
+          description: 'invalid input, object invalid'
+        '409':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'email is already exists'
+          description: an existing email
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of of user
+                password:
+                  type: string
+                  description: user password
+                first_name:
+                  type: string
+                  description: user first_name
+                last_name:
+                  type: string
+                  description: user last_name
+                userType:
+                  type: string
+                  description: if provided with 'admin' as value, user is created as an admin else defaults to a non-admin user
+              example:
+                email: tunde@pizza.com
+                password: admin101Qwerty
+                first_name: tunde@pizza.com
+                last_name: pizza
+        description: logs in an existing admin
+  /api/v1/auth/signin:
+    post:
+      tags:
+        - Users
+      summary: registers a new user
+      operationId: signinUser
+      description: |
+        By passing in the appropriate user info you should create a new user
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: jwt token
+                      user:
+                        type: object
+                        description: user data
+                    description: data from request
+                example:
+                  status: 'success'
+                  data:
+                    user:
+                      first_name: tunde
+                      last_name: pizza
+                    token: egsyfhgs45ushfjs45uughkdihdhojdl87d
+
+          description: User successfully created
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'email is required'
+          description: 'invalid input, object invalid'
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'email is does not exists'
+          description: an invalid email
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'password is incorrect'
+          description: wrong password
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: mc@fluidangle.com
+                password: chf3g65768i3
+        description: emaiil of registered user
+  /api/v1/trips:
+    get:
+      tags:
+        - Trips
+      summary: Get all trips
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    description: array of trips
+                example:
+                  status: 'success'
+                  data:
+                      first_name: tunde
+                      last_name: pizza
+
+          description: List of trips
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - Trips
+        - Admin
+      summary: creates a new trip
+      operationId: createTrip
+      description: |
+        By passing in the appropriate trip info you should create a new trip
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      trip_id:
+                        type: number
+                        description: id of created trip
+                      bus_id:
+                        type: number
+                        description: id of bus to be used
+                      origin:
+                        type: string
+                        description: take off location
+                      destination:
+                        type: string
+                        description: trip destination
+                      trip_date:
+                        type: string
+                        description: date of trip
+                      fare:
+                        type: float
+                        description: cost of trip
+                    description: data from request
+                example:
+                  status: 'success'
+                  data:
+                    trip_id: 1
+                    bus_id: 1
+                    origin: egbeda
+                    destination: oshodi
+                    fare: 150.00
+                    trip_date: timestamp
+          description: Trip successfully created
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'bus_id is required'
+          description: 'invalid input, object invalid'
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'bus_id is does not exists'
+          description: an invalid email
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'you are not authorized to access this endpoint'
+          description: Invalid Authorization or jwt token
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                user_id: 1
+                bus_id: 1      
+  /api/v1/trips/{tripId}:
+    get:
+      tags:
+        - Trips
+      summary: Get one trip
+      parameters:
+        - in: params
+          name: tripId
+          schema:
+            type: string
+            required: true
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      trip_id:
+                        type: number
+                        description: id of created trip
+                      bus_id:
+                        type: number
+                        description: id of bus to be used
+                      origin:
+                        type: string
+                        description: take off location
+                      destination:
+                        type: string
+                        description: trip destination
+                      trip_date:
+                        type: string
+                        description: date of trip
+                      fare:
+                        type: float
+                        description: cost of trip
+                    description: data from request
+                example:
+                  status: 'success'
+                  data:
+                    trip_id: 1
+                    bus_id: 1
+                    origin: egbeda
+                    destination: oshodi
+                    fare: 150.00
+                    trip_date: timestamp
+
+          description: List of trips
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'tripId does not exists'
+          description: an invalid email
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'you are not authorized to access this endpoint'
+          description: Invalid Authorization or jwt token
+        '500':
+          description: Internal Server Error
+    patch:
+      tags:
+        - Trips
+        - Admin
+      summary: cancels a trip
+      operationId: canceltrip
+      description: |
+        cancels a trip
+      parameters:
+        - in: params
+          name: tripId
+          schema:
+            type: string
+            required: true
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      messsage:
+                        type: string
+                example:
+                  status: 'success'
+                  data:
+                    message: Trip successfully cancelled
+          description: Trip successfully cancelled
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'tripId is required'
+          description: 'invalid input, object invalid'
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'tripId is does not exists'
+          description: an invalid email
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'you are not authorized to access this endpoint'
+          description: Invalid Authorization or jwt token
+        '500':
+          description: Internal Server Error
+  /api/v1/buses:
+    post:
+      tags:
+        - Buses
+      summary: register a bus
+      operationId: createBus
+      description: |
+        Registers a new bus on the platform
+      responses:
+        '201':
+          description: Bus successfully created
+        '401':
+          description: 'invalid input, object invalid'
+        '409':
+          description: a bus with provided number_plate already exists
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                number_plate: bhdk6784
+                manufacturer: Toyota
+                model: Hiace
+                year: '2014'
+                capacity: 18
+        description: New bus info to be created
+  /api/v1/bookings:
+    get:
+      tags:
+        - Bookings
+      summary: Get all bookings
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    description: array of bookings
+                example:
+                  status: 'success'
+                  data:
+                      -
+                        booking_id: number
+                        user_id: number
+                        trip_id: number
+                        bus_id: number
+                        trip_date: number
+                        seat_number: number
+                        first_name: string
+                        last_name: string
+                        email: string
+          description: List of bookings
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'you are not authorized to access this endpoint'
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - Bookings
+      summary: books a trip
+      operationId: bookTrip
+      description: |
+        Books a trip for the user and reserves a seat
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      trip_id:
+                        type: number
+                        description: id of created trip
+                      bus_id:
+                        type: number
+                        description: id of bus to be used
+                      booking_id:
+                        type: number
+                        description: booking id
+                      seat_number:
+                        type: number
+                        description: number of reserved seat
+                      first_name:
+                        type: string
+                        description: first name of user
+                      last_name:
+                        type: string
+                        description: last name of 
+                      email:
+                        type: string
+                        description: email of user
+                    description: data from request
+                example:
+                  status: 'success'
+                  data:
+                    booking_id: number
+                    user_id: number
+                    trip_id: number
+                    bus_id: number
+                    trip_date: number
+                    seat_number: number
+                    first_name: string
+                    last_name: string
+                    email: string
+          description: Booking successfully created
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'trip_id is required'
+          description: 'invalid input, object invalid'
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'trip_id is does not exists'
+          description: an invalid email
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'you are not authorized to access this endpoint'
+          description: Invalid Authorization or jwt token
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                trip_id: 1 
+  /api/v1/bookings/{bookingId}:
+    delete:
+      tags:
+        - Bookings
+      summary: books a trip
+      operationId: deleteBooking
+      description: |
+        Books a trip for the user and reserves a seat
+      parameters:
+        - in: params
+          name: bookingId
+          schema:
+            type: number
+          required: true
+          description: id of booking to delete
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status either 'success'
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                example:
+                  status: 'success'
+                  data:
+                    message: 'booking deleted successfully'
+          description: Booking successfully created
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'bookingId is required'
+          description: 'invalid input, object invalid'
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'bookingId is does not exists'
+          description: an invalid email
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+                example:
+                  status: 'error'
+                  error: 'you are not authorized to access this endpoint'
+          description: Invalid Authorization or jwt token
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                trip_id: 1 
