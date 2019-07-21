@@ -28,8 +28,6 @@ app.use(helmet())
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 app.get('/api/v1', (req, res) => res.status(200).send({
   status: 'success',
   message: 'Welcome Save A Seat API'
@@ -39,6 +37,8 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/buses', bus);
 app.use('/api/v1/trips', trip);
 app.use('/api/v1/bookings', booking);
+
+app.get('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port);
 logger().info(`app running on port ${port}`);
