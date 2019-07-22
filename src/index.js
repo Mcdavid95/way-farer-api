@@ -38,7 +38,7 @@ app.use('/api/v1/buses', bus);
 app.use('/api/v1/trips', trip);
 app.use('/api/v1/bookings', booking);
 
-app.get('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port);
 logger().info(`app running on port ${port}`);
